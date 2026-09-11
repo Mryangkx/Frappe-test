@@ -1,0 +1,3 @@
+# Patches are run once after a bench migrate.
+# Add patch paths below, one per line, e.g.:
+# order_analytics.order_analytics.patch.example.execute

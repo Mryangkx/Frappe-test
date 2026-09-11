@@ -1,0 +1,23 @@
+[build-system]
+requires = ["flit_core >=3.4,<4"]
+build-backend = "flit_core.buildapi"
+
+[project]
+name = "order_analytics"
+authors = [
+	{ name = "Order Analytics", email = "admin@example.com" },
+]
+description = "Customer order import and purchase analytics for Frappe / ERPNext"
+requires-python = ">=3.10"
+dynamic = ["version"]
+dependencies = [
+	# add python dependencies here
+]
+
+[project.optional-dependencies]
+test = [
+	"coverage",
+]
+
+[tool.bench]
+module = "order_analytics"

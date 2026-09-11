@@ -1,0 +1,18 @@
+{
+ "actions": [],
+ "creation": "2026-09-11 00:00:00.000000",
+ "doctype": "Page",
+ "idx": 0,
+ "modified": "2026-09-11 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Order Analytics",
+ "name": "order-analytics-dashboard",
+ "owner": "Administrator",
+ "page_name": "order-analytics-dashboard",
+ "roles": [
+  {
+   "role": "System Manager"
+  }
+ ],
+ "title": "订单分析看板"
+}
