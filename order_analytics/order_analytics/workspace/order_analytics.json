@@ -1,0 +1,53 @@
+{
+ "charts": [],
+ "creation": "2026-09-12 00:00:00.000000",
+ "doctype": "Workspace",
+ "extends_another": 0,
+ "hidden": 0,
+ "is_default": 0,
+ "links": [],
+ "modified": "2026-09-12 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Order Analytics",
+ "name": "Order Analytics",
+ "owner": "Administrator",
+ "public": 1,
+ "restrict_to_domain": "",
+ "shortcuts": [
+  {
+   "color": "#5e64ff",
+   "doc_view": "List",
+   "icon": "octicon octicon-list-ordered",
+   "indent": "0",
+   "label": "Customer Orders",
+   "link_to": "Customer Order",
+   "type": "DocType"
+  },
+  {
+   "color": "#63c688",
+   "icon": "octicon octicon-graph",
+   "indent": "0",
+   "label": "Customer Purchase Analysis",
+   "link_to": "Customer Purchase Analysis",
+   "type": "Report"
+  },
+  {
+   "color": "#ffa3ef",
+   "icon": "octicon octicon-dashboard",
+   "indent": "0",
+   "label": "Order Analytics Dashboard",
+   "link_to": "order-analytics-dashboard",
+   "type": "Page"
+  },
+  {
+   "color": "#ffc400",
+   "doc_view": "Form",
+   "icon": "octicon octicon-gear",
+   "indent": "0",
+   "label": "TikTok Shop Settings",
+   "link_to": "TikTok Shop Settings",
+   "type": "DocType"
+  }
+ ],
+ "title": "Order Analytics"
+}

@@ -4,6 +4,8 @@
    appears in the ERPNext sidebar.
 2. Grant order / report / page permissions to ERPNext Sales User / Sales Manager
    roles (only when those roles exist; skipped on a plain Frappe site).
+3. Force-update any stale Chinese labels left in the database from earlier
+   migrations (Page title, DocField labels, etc.).
 """
 
 import frappe
@@ -48,19 +50,30 @@ SALES_DOCTYPE_PERMISSIONS = {
 	},
 }
 
-MANAGED_DOCTYPES = ["Customer Order"]
+MANAGED_DOCTYPES = ["Customer Order", "Customer Order Item", "TikTok Shop Settings"]
 MANAGED_REPORTS = ["Customer Purchase Analysis"]
 MANAGED_PAGES = ["order-analytics-dashboard"]
+
+# Force-correct any stale Chinese labels that may remain in the DB from
+# earlier migrations. Keyed by (doctype, docname, fieldname) -> new value.
+STALE_LABEL_FIXES = {
+	("Page", "order-analytics-dashboard", "title"): "Order Analytics Dashboard",
+	("Page", "order-analytics-dashboard", "module"): "Order Analytics",
+	("Module Def", "Order Analytics", "label"): "Order Analytics",
+	("Module Def", "Order Analytics", "app"): "order_analytics",
+}
 
 
 def after_install():
 	setup_module_defs()
+	fix_stale_labels()
 	grant_sales_permissions()
 	frappe.db.commit()
 
 
 def after_migrate():
 	setup_module_defs()
+	fix_stale_labels()
 	grant_sales_permissions()
 	frappe.db.commit()
 
@@ -81,6 +94,55 @@ def setup_module_defs():
 		doc.color = defs.get("color", "#5e64ff")
 		doc.restrict_to_domain = defs.get("restrict_to_domain")
 		doc.save(ignore_permissions=True)
+
+	# Explicitly set the name field too (some Frappe versions need it)
+	frappe.db.set_value("Module Def", "Order Analytics", "name", "Order Analytics")
+
+
+def fix_stale_labels():
+	"""Overwrite any stale Chinese labels in the database with English.
+
+	Run on every migrate so the UI never shows old Chinese text.
+	"""
+	for (doctype, docname, fieldname), value in STALE_LABEL_FIXES.items():
+		if frappe.db.exists(doctype, docname):
+			frappe.db.set_value(doctype, docname, fieldname, value)
+
+	# Fix DocField labels for Customer Order if any Chinese slipped through
+	customer_order_field_labels = {
+		"naming_series": "Naming Series",
+		"customer": "Customer",
+		"transaction_date": "Order Date",
+		"currency": "Currency",
+		"total_qty": "Total Quantity",
+		"total_amount": "Total Amount",
+		"source": "Source",
+		"external_order_id": "External Order ID",
+		"external_order_url": "External Order URL",
+		"buyer_user_id": "Buyer User ID",
+		"amended_from": "Amended From",
+		"items": "Order Items",
+		"notes": "Notes",
+	}
+	for fieldname, label in customer_order_field_labels.items():
+		frappe.db.sql(
+			"UPDATE `tabDocField` SET label = %s WHERE parent = 'Customer Order' AND fieldname = %s",
+			(label, fieldname),
+		)
+
+	customer_order_item_labels = {
+		"item_code": "Item Code",
+		"item_name": "Item Name",
+		"qty": "Qty",
+		"uom": "UOM",
+		"rate": "Rate",
+		"amount": "Amount",
+	}
+	for fieldname, label in customer_order_item_labels.items():
+		frappe.db.sql(
+			"UPDATE `tabDocField` SET label = %s WHERE parent = 'Customer Order Item' AND fieldname = %s",
+			(label, fieldname),
+		)
 
 
 def grant_sales_permissions():

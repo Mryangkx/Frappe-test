@@ -33,6 +33,16 @@ module_def = {
 	},
 }
 
+# Show this app in the /desk apps screen (top-left app switcher + home tiles)
+add_to_apps_screen = [
+	{
+		"name": "order_analytics",
+		"logo": "/assets/order_analytics/logo.png",
+		"title": "Order Analytics",
+		"route": "/app/order-analytics",
+	},
+]
+
 # ---- Page static assets (enable as needed) ----
 # app_include_css = "/assets/order_analytics/css/order_analytics.css"
 # app_include_js = "/assets/order_analytics/js/order_analytics.js"

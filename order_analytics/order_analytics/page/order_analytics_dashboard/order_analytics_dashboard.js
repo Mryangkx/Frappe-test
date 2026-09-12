@@ -57,7 +57,7 @@ frappe.pages["order-analytics-dashboard"].on_page_load = function (wrapper) {
 
 		try {
 			const data = await frappe.xcall(
-				"order_analytics.page.order_analytics_dashboard.order_analytics_dashboard.get_data",
+				"order_analytics.order_analytics.page.order_analytics_dashboard.order_analytics_dashboard.get_data",
 				{
 					from_date: page.from_date.get_value(),
 					to_date: page.to_date.get_value(),
