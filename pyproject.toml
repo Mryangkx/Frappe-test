@@ -21,3 +21,7 @@ test = [
 
 [tool.bench]
 module = "order_analytics"
+
+[tool.bench.frappe-dependencies]
+frappe = ">=16.0.0,<17.0.0"
+erpnext = ">=16.0.0,<17.0.0"
