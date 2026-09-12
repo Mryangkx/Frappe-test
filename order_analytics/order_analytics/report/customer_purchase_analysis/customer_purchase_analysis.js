@@ -5,29 +5,29 @@ frappe.query_reports["Customer Purchase Analysis"] = {
 	filters: [
 		{
 			fieldname: "from_date",
-			label: __("开始日期"),
+			label: __("From Date"),
 			fieldtype: "Date",
 			default: frappe.datetime.add_months(frappe.datetime.get_today(), -12),
 			reqd: 1,
 		},
 		{
 			fieldname: "to_date",
-			label: __("结束日期"),
+			label: __("To Date"),
 			fieldtype: "Date",
 			default: frappe.datetime.get_today(),
 			reqd: 1,
 		},
 		{
 			fieldname: "customer",
-			label: __("客户"),
+			label: __("Customer"),
 			fieldtype: "Data",
-			description: __("按客户名称模糊筛选，留空统计全部客户"),
+			description: __("Filter by customer name (fuzzy). Leave blank for all customers."),
 		},
 		{
 			fieldname: "include_drafts",
-			label: __("包含草稿订单"),
+			label: __("Include Draft Orders"),
 			fieldtype: "Check",
-			description: __("默认只统计已提交订单"),
+			description: __("Only submitted orders are counted by default"),
 		},
 	],
 };

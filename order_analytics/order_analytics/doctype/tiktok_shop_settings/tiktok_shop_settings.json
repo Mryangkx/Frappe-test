@@ -1,0 +1,158 @@
+{
+ "actions": [],
+ "creation": "2026-09-12 00:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "credentials_section",
+  "app_key",
+  "app_secret",
+  "access_token",
+  "refresh_token",
+  "shop_region",
+  "shop_cipher",
+  "is_sandbox",
+  "auto_sync_section",
+  "auto_sync_enabled",
+  "sync_interval_hours",
+  "sync_lookback_hours",
+  "next_sync_time",
+  "sync_section",
+  "last_sync_time",
+  "last_sync_status",
+  "last_sync_message"
+ ],
+ "fields": [
+  {
+   "fieldname": "credentials_section",
+   "fieldtype": "Section Break",
+   "label": "TikTok Shop API Credentials"
+  },
+  {
+   "fieldname": "app_key",
+   "fieldtype": "Data",
+   "label": "App Key",
+   "reqd": 1
+  },
+  {
+   "fieldname": "app_secret",
+   "fieldtype": "Password",
+   "label": "App Secret",
+   "reqd": 1
+  },
+  {
+   "fieldname": "access_token",
+   "fieldtype": "Password",
+   "label": "Access Token"
+  },
+  {
+   "fieldname": "refresh_token",
+   "fieldtype": "Password",
+   "label": "Refresh Token"
+  },
+  {
+   "default": "UK",
+   "fieldname": "shop_region",
+   "fieldtype": "Select",
+   "label": "Shop Region",
+   "options": "UK\nUS\nTH\nVN\nID\nMY\nPH\nSG\nJP"
+  },
+  {
+   "fieldname": "shop_cipher",
+   "fieldtype": "Data",
+   "label": "Shop Cipher"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_sandbox",
+   "fieldtype": "Check",
+   "label": "Sandbox Mode"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "auto_sync_section",
+   "fieldtype": "Section Break",
+   "label": "Automatic Sync"
+  },
+  {
+   "default": "0",
+   "fieldname": "auto_sync_enabled",
+   "fieldtype": "Check",
+   "label": "Enable Automatic Sync"
+  },
+  {
+   "default": "24",
+   "depends_on": "eval: doc.auto_sync_enabled",
+   "fieldname": "sync_interval_hours",
+   "fieldtype": "Int",
+   "label": "Sync Interval (hours)",
+   "description": "How often to automatically pull new orders"
+  },
+  {
+   "default": "26",
+   "depends_on": "eval: doc.auto_sync_enabled",
+   "fieldname": "sync_lookback_hours",
+   "fieldtype": "Int",
+   "label": "Lookback Window (hours)",
+   "description": "How far back to pull on each sync (set slightly larger than the interval to avoid missing orders)"
+  },
+  {
+   "depends_on": "eval: doc.auto_sync_enabled",
+   "fieldname": "next_sync_time",
+   "fieldtype": "Datetime",
+   "label": "Next Scheduled Sync",
+   "read_only": 1,
+   "description": "Automatically updated after each sync"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "sync_section",
+   "fieldtype": "Section Break",
+   "label": "Sync Status"
+  },
+  {
+   "fieldname": "last_sync_time",
+   "fieldtype": "Datetime",
+   "label": "Last Sync Time",
+   "read_only": 1
+  },
+  {
+   "default": "Never",
+   "fieldname": "last_sync_status",
+   "fieldtype": "Select",
+   "label": "Last Sync Status",
+   "options": "Never\nSuccess\nFailed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "last_sync_message",
+   "fieldtype": "Small Text",
+   "label": "Last Sync Message",
+   "read_only": 1
+  }
+ ],
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-09-12 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Order Analytics",
+ "name": "TikTok Shop Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

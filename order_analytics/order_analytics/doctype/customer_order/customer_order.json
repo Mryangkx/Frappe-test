@@ -14,6 +14,11 @@
   "column_break_1",
   "total_qty",
   "total_amount",
+  "source_section",
+  "source",
+  "external_order_id",
+  "external_order_url",
+  "buyer_user_id",
   "amended_from",
   "items_section",
   "items",
@@ -24,7 +29,7 @@
   {
    "fieldname": "naming_series",
    "fieldtype": "Select",
-   "label": "编号规则",
+   "label": "Naming Series",
    "options": "OA-.YYYY.-.#####\nOA-.#####",
    "default": "OA-.YYYY.-.#####",
    "reqd": 1
@@ -35,7 +40,7 @@
    "fieldtype": "Data",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "客户",
+   "label": "Customer",
    "reqd": 1,
    "search_index": 1
   },
@@ -45,14 +50,14 @@
    "fieldtype": "Date",
    "in_list_view": 1,
    "in_standard_filter": 1,
-   "label": "订单日期",
+   "label": "Order Date",
    "reqd": 1
   },
   {
-   "default": "CNY",
+   "default": "GBP",
    "fieldname": "currency",
    "fieldtype": "Data",
-   "label": "币种",
+   "label": "Currency",
    "length": 3
   },
   {
@@ -63,21 +68,58 @@
    "fieldname": "total_qty",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "商品总数量",
+   "label": "Total Quantity",
    "read_only": 1
   },
   {
    "fieldname": "total_amount",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "订单总金额",
+   "label": "Total Amount",
    "options": "currency",
    "read_only": 1
   },
   {
+   "collapsible": 1,
+   "fieldname": "source_section",
+   "fieldtype": "Section Break",
+   "label": "Source"
+  },
+  {
+   "default": "Manual",
+   "fieldname": "source",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Source",
+   "options": "Manual\nTikTok Shop",
+   "read_only": 1
+  },
+  {
+   "fieldname": "external_order_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "External Order ID",
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
+   "fieldname": "external_order_url",
+   "fieldtype": "Data",
+   "label": "External Order URL",
+   "read_only": 1
+  },
+  {
+   "fieldname": "buyer_user_id",
+   "fieldtype": "Data",
+   "label": "Buyer User ID",
+   "read_only": 1,
+   "search_index": 1
+  },
+  {
    "fieldname": "amended_from",
    "fieldtype": "Link",
-   "label": "修订自",
+   "label": "Amended From",
    "no_copy": 1,
    "options": "Customer Order",
    "print_hide": 1,
@@ -86,12 +128,12 @@
   {
    "fieldname": "items_section",
    "fieldtype": "Section Break",
-   "label": "订单明细"
+   "label": "Order Items"
   },
   {
    "fieldname": "items",
    "fieldtype": "Table",
-   "label": "订单明细",
+   "label": "Order Items",
    "options": "Customer Order Item",
    "reqd": 1
   },
@@ -99,12 +141,12 @@
    "collapsible": 1,
    "fieldname": "notes_section",
    "fieldtype": "Section Break",
-   "label": "备注"
+   "label": "Notes"
   },
   {
    "fieldname": "notes",
    "fieldtype": "Small Text",
-   "label": "备注"
+   "label": "Notes"
   }
  ],
  "grid_page_length": 100,

@@ -19,7 +19,7 @@ frappe.ui.form.on("Customer Order", {
 	},
 });
 
-// 子表行内数量 / 单价变化时即时重算金额与合计
+// Recalculate row amount and totals when qty / rate changes in the child table
 frappe.ui.form.on("Customer Order Item", {
 	qty(frm, cdt, cdn) {
 		recalculate_row(frm, cdt, cdn);

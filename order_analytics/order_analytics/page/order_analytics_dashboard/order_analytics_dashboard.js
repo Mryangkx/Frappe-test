@@ -4,7 +4,7 @@
 frappe.pages["order-analytics-dashboard"].on_page_load = function (wrapper) {
 	const page = frappe.ui.make_app_page({
 		parent: wrapper,
-		title: __("订单分析看板"),
+		title: __("Order Analytics Dashboard"),
 		single_column: true,
 	});
 
@@ -12,25 +12,33 @@ frappe.pages["order-analytics-dashboard"].on_page_load = function (wrapper) {
 
 	page.from_date = page.add_field({
 		fieldname: "from_date",
-		label: __("开始日期"),
+		label: __("From Date"),
 		fieldtype: "Date",
 		default: frappe.datetime.add_months(today, -12),
 	});
 
 	page.to_date = page.add_field({
 		fieldname: "to_date",
-		label: __("结束日期"),
+		label: __("To Date"),
 		fieldtype: "Date",
 		default: today,
 	});
 
-	page.set_primary_action(__("查询"), () => load_data());
+	page.set_primary_action(__("Refresh"), () => load_data());
 
 	page.main.html(`
 		<div class="oa-kpi-row row"></div>
 		<div class="row" style="margin-top: var(--margin-sm)">
 			<div class="col-sm-12">
 				<div class="oa-top-card card"></div>
+			</div>
+		</div>
+		<div class="row" style="margin-top: var(--margin-sm)">
+			<div class="col-sm-8">
+				<div class="oa-products-card card"></div>
+			</div>
+			<div class="col-sm-4">
+				<div class="oa-source-card card"></div>
 			</div>
 		</div>
 		<div class="row" style="margin-top: var(--margin-sm)">
@@ -44,7 +52,7 @@ frappe.pages["order-analytics-dashboard"].on_page_load = function (wrapper) {
 
 	async function load_data() {
 		page.main.find(".oa-kpi-row").html(
-			`<div class="col-sm-12 text-muted text-center">${__("加载中...")}</div>`
+			`<div class="col-sm-12 text-muted text-center">${__("Loading...")}</div>`
 		);
 
 		try {
@@ -59,13 +67,15 @@ frappe.pages["order-analytics-dashboard"].on_page_load = function (wrapper) {
 		} catch (error) {
 			page.main
 				.find(".oa-kpi-row")
-				.html(`<div class="col-sm-12 text-center">${__("数据加载失败")}: ${error.message}</div>`);
+				.html(`<div class="col-sm-12 text-center">${__("Failed to load data")}: ${error.message}</div>`);
 		}
 	}
 
 	function render(data) {
 		render_kpis(data.summary || []);
 		render_top_customers(data.top_customers || []);
+		render_top_products(data.top_products || []);
+		render_source_breakdown(data.source_breakdown || []);
 		render_monthly_trend(data.monthly_trend || []);
 	}
 
@@ -95,11 +105,11 @@ frappe.pages["order-analytics-dashboard"].on_page_load = function (wrapper) {
 
 	function render_top_customers(rows) {
 		const card = page.main.find(".oa-top-card").empty();
-		$(`<div class="card-header">${__("客户消费排行 Top 10")}</div>`).appendTo(card);
+		$(`<div class="card-header">${__("Top 10 Customers by Spend")}</div>`).appendTo(card);
 		const body = $(`<div class="card-body oa-top-chart"></div>`).appendTo(card);
 
 		if (!rows.length) {
-			body.html(`<div class="text-muted text-center">${__("暂无已提交的订单数据")}</div>`);
+			body.html(`<div class="text-muted text-center">${__("No submitted orders yet")}</div>`);
 			return;
 		}
 
@@ -110,28 +120,96 @@ frappe.pages["order-analytics-dashboard"].on_page_load = function (wrapper) {
 			new frappe.Chart(body.get(0), {
 				data: {
 					labels: labels,
-					datasets: [{ name: __("消费总金额"), values: values }],
+					datasets: [{ name: __("Total Amount"), values: values }],
 				},
 				type: "bar",
 				height: 300,
 				colors: ["#5e64ff"],
-				barOptions: { height: "20px", stacked: false },
+				barOptions: { stacked: false },
 			});
 		} else {
 			render_fallback_table(body, [
-				{ label: __("客户"), field: "customer" },
-				{ label: __("消费总金额"), field: "total_amount", format: (v) => format_currency(v) },
+				{ label: __("Customer"), field: "customer" },
+				{ label: __("Total Amount"), field: "total_amount", format: (v) => format_currency(v) },
+			], rows);
+		}
+	}
+
+	function render_top_products(rows) {
+		const card = page.main.find(".oa-products-card").empty();
+		$(`<div class="card-header">${__("Top 10 Products by Sales")}</div>`).appendTo(card);
+		const body = $(`<div class="card-body oa-products-chart"></div>`).appendTo(card);
+
+		if (!rows.length) {
+			body.html(`<div class="text-muted text-center">${__("No product data available")}</div>`);
+			return;
+		}
+
+		// Reverse so the highest value appears at the top of the horizontal bar chart
+		const sorted = [...rows].reverse();
+		const labels = sorted.map((row) => row.item_name);
+		const values = sorted.map((row) => flt(row.total_amount));
+
+		if (frappe.Chart) {
+			new frappe.Chart(body.get(0), {
+				data: {
+					labels: labels,
+					datasets: [{ name: __("Sales Value"), values: values }],
+				},
+				type: "bar",
+				height: 360,
+				colors: ["#63c688"],
+				barOptions: { stacked: false },
+				axisOptions: { xIsSeries: false },
+			});
+		} else {
+			render_fallback_table(body, [
+				{ label: __("Product"), field: "item_name" },
+				{ label: __("Qty Sold"), field: "total_qty" },
+				{ label: __("Sales Value"), field: "total_amount", format: (v) => format_currency(v) },
+			], rows);
+		}
+	}
+
+	function render_source_breakdown(rows) {
+		const card = page.main.find(".oa-source-card").empty();
+		$(`<div class="card-header">${__("Orders by Source")}</div>`).appendTo(card);
+		const body = $(`<div class="card-body oa-source-chart"></div>`).appendTo(card);
+
+		if (!rows.length) {
+			body.html(`<div class="text-muted text-center">${__("No data for the selected period")}</div>`);
+			return;
+		}
+
+		const labels = rows.map((row) => row.source);
+		const values = rows.map((row) => cint(row.order_count));
+
+		if (frappe.Chart) {
+			new frappe.Chart(body.get(0), {
+				data: {
+					labels: labels,
+					datasets: [{ name: __("Order Count"), values: values }],
+				},
+				type: "donut",
+				height: 260,
+				colors: ["#5e64ff", "#63c688", "#ffa3ef", "#ffc400", "#ff7a45"],
+			});
+		} else {
+			render_fallback_table(body, [
+				{ label: __("Source"), field: "source" },
+				{ label: __("Order Count"), field: "order_count" },
+				{ label: __("Total Sales"), field: "total_amount", format: (v) => format_currency(v) },
 			], rows);
 		}
 	}
 
 	function render_monthly_trend(rows) {
 		const card = page.main.find(".oa-trend-card").empty();
-		$(`<div class="card-header">${__("月度销售趋势")}</div>`).appendTo(card);
+		$(`<div class="card-header">${__("Monthly Sales Trend")}</div>`).appendTo(card);
 		const body = $(`<div class="card-body oa-trend-chart"></div>`).appendTo(card);
 
 		if (!rows.length) {
-			body.html(`<div class="text-muted text-center">${__("所选区间暂无数据")}</div>`);
+			body.html(`<div class="text-muted text-center">${__("No data for the selected period")}</div>`);
 			return;
 		}
 
@@ -144,8 +222,8 @@ frappe.pages["order-analytics-dashboard"].on_page_load = function (wrapper) {
 				data: {
 					labels: labels,
 					datasets: [
-						{ name: __("销售总额"), values: amounts, chartType: "line" },
-						{ name: __("订单数"), values: counts, chartType: "bar" },
+						{ name: __("Total Sales"), values: amounts, chartType: "line" },
+						{ name: __("Order Count"), values: counts, chartType: "bar" },
 					],
 				},
 				type: "axis-mixed",
@@ -155,9 +233,9 @@ frappe.pages["order-analytics-dashboard"].on_page_load = function (wrapper) {
 			});
 		} else {
 			render_fallback_table(body, [
-				{ label: __("月份"), field: "month" },
-				{ label: __("订单数"), field: "order_count" },
-				{ label: __("销售总额"), field: "total_amount", format: (v) => format_currency(v) },
+				{ label: __("Month"), field: "month" },
+				{ label: __("Order Count"), field: "order_count" },
+				{ label: __("Total Sales"), field: "total_amount", format: (v) => format_currency(v) },
 			], rows);
 		}
 	}

@@ -17,14 +17,14 @@
    "fieldname": "item_code",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "商品编码",
+   "label": "Item Code",
    "reqd": 1
   },
   {
    "fieldname": "item_name",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "商品名称"
+   "label": "Item Name"
   },
   {
    "columns": 1,
@@ -32,22 +32,22 @@
    "fieldname": "qty",
    "fieldtype": "Float",
    "in_list_view": 1,
-   "label": "数量",
+   "label": "Qty",
    "reqd": 1
   },
   {
-   "default": "件",
+   "default": "Unit",
    "fieldname": "uom",
    "fieldtype": "Data",
    "in_list_view": 1,
-   "label": "单位"
+   "label": "UOM"
   },
   {
    "columns": 1,
    "fieldname": "rate",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "单价",
+   "label": "Rate",
    "reqd": 1
   },
   {
@@ -55,7 +55,7 @@
    "fieldname": "amount",
    "fieldtype": "Currency",
    "in_list_view": 1,
-   "label": "金额",
+   "label": "Amount",
    "read_only": 1
   }
  ],

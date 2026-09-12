@@ -7,7 +7,8 @@ from frappe.utils import flt
 
 class CustomerOrder(Document):
 	def validate(self):
-		# 后端兜底计算：UI 录入、Excel/CSV 导入、API 写入都会走这里，保证金额一致
+		# Back-end fallback calculation: runs for UI entry, Excel/CSV import, and API writes
+		# so quantities and amounts are always consistent.
 		self.calculate_totals()
 
 	def calculate_totals(self):

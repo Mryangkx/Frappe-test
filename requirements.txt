@@ -1,1 +1,3 @@
-# order_analytics python dependencies (Frappe / ERPNext are provided by the bench)
+# order_analytics python dependencies
+# (Frappe / ERPNext are provided by the bench; requests is used by the TikTok Shop API client)
+requests
